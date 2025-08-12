@@ -1,0 +1,32 @@
+{
+  "name": "caloriecompany",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000C\u0000a\u0000l\u0000o\u0000r\u0000i\u0000e\u0000C\u0000o\u0000m\u0000p\u0000a\u0000n\u0000y\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+  "dev": "concurrently -k -n CLIENT,SERVER -c auto \"npm:dev:client\" \"npm:dev:server\"",
+  "dev:client": "npm --workspace client run dev",
+  "dev:server": "npm --workspace server run dev",
+  "build": "npm -w client run build && npm -w server run build",
+  "start": "npm -w server run start"
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/camelCase5/caloriecompany.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/camelCase5/caloriecompany/issues"
+  },
+  "homepage": "https://github.com/camelCase5/caloriecompany#readme",
+  "private": "true",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}
