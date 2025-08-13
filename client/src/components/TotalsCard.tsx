@@ -1,4 +1,7 @@
-// this represents the total summary card of all macronutrients
+// this component shows the total amounts for calories and each macronutrient for the current day
+// it takes in the totals as props and just displays them in four evenly spaced sections
+// learned how to style each nutrient differently to make them easy to spot at a glance
+
 export default function TotalsCard({
   totals,
 }: {
