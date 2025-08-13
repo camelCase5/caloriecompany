@@ -188,7 +188,8 @@ git push -u origin main
 ## Demo Video
 
 Link to Demo Video (ScreenApp.io): https://screenapp.io/app/#/shared/FAiYIntI4v
-`Ctrl + Click to open on a different tab`
+
+Ctrl + Click to open on a different tab
 
 ## Screenshots
 
@@ -206,6 +207,7 @@ Link to Demo Video (ScreenApp.io): https://screenapp.io/app/#/shared/FAiYIntI4v
 - Email: vrajp@vt.edu
 
 - Github: https://github.com/camelCase5
+
 
 
 
