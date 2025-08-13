@@ -1,6 +1,4 @@
 // this component is our mvp for weekly weight tracking.
-// we decided to keep it local-only first (no backend) so we could learn the charting + state flow
-// without getting blocked by server work. the state shape is simple so we can persist later.
 
 import { useEffect, useMemo, useState } from "react";
 // we tried a few chart libs and landed on recharts because responsive container made sizing easier for us
