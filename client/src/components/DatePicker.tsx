@@ -6,7 +6,7 @@ import "react-day-picker/dist/style.css";
 type Props = {
   value: string;
   onChange: (next: string) => void;
-  disablePast?: boolean; // for weight section i don't want past dates
+  disablePast?: boolean;
 };
 
 // helper: parse yyyy-mm-dd in local time (no utc shift)
