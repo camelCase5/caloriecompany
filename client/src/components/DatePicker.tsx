@@ -1,4 +1,8 @@
-// a small calendar picker using react-day-picker so the date ui feels nicer
+// this component is a custom date picker we built using react-day-picker to make selecting dates easier
+// it takes in the currently selected value as a string, and a function to change it
+// also added an optional prop to prevent picking past dates so that the user flow is cleaner
+// learned how to parse and format dates in yyyy-mm-dd format so it works consistently across browsers
+
 import { useEffect, useMemo, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
@@ -9,7 +13,7 @@ type Props = {
   disablePast?: boolean;
 };
 
-// helper: parse yyyy-mm-dd in local time (no utc shift)
+// helper: parse yyyy-mm-dd in local time
 function parseISODateOnly(s: string): Date | undefined {
   if (!s) return undefined;
   const [y, m, d] = s.split("-").map((n) => Number(n));
@@ -89,5 +93,3 @@ export default function DatePicker({ value, onChange, disablePast }: Props) {
     </div>
   );
 }
-
-
