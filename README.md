@@ -174,13 +174,13 @@ cd path/to/your/project
 git init
 
 # Link local repo to the existing GitHub repo
-git remote add origin https://github.com/USERNAME/REPO-NAME.git
+git remote add origin https://github.com/camelCase5/caloriecompany.git
 
 # Stage all changes
 git add .
 
 # Commit the changes
-git commit -m "Adding full project files"
+git commit -m "Add/update files"
 
 # Push to the remote repository
 git push -u origin main
@@ -205,6 +205,7 @@ Link to Demo Video (ScreenApp.io): https://screenapp.io/app/#/shared/FAiYIntI4v
 - Email: vrajp@vt.edu
 
 - Github: https://github.com/camelCase5
+
 
 
 
