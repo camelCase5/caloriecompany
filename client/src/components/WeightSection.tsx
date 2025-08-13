@@ -1,5 +1,9 @@
-// this section is just for local weight tracking
+// this component is our mvp for weekly weight tracking.
+// we decided to keep it local-only first (no backend) so we could learn the charting + state flow
+// without getting blocked by server work. the state shape is simple so we can persist later.
+
 import { useEffect, useMemo, useState } from "react";
+// we tried a few chart libs and landed on recharts because responsive container made sizing easier for us
 import {
   LineChart,
   Line,
@@ -11,10 +15,10 @@ import {
   ReferenceLine,
 } from "recharts";
 
-// a simple local-only model for now
+// we store one point per date; keeping the type tiny helped us reason about updates
 type WeightPoint = { date: string; weight: number };
 
-// helper for yyyy-mm-dd (local time, not utc, to avoid off-by-one)
+// helper to build a local yyyy-mm-dd string
 function todayISO() {
   const d = new Date();
   const y = d.getFullYear();
@@ -23,20 +27,23 @@ function todayISO() {
   return `${y}-${m}-${day}`;
 }
 
+// parent passes in the selected date from app; we use it when adding a point
 export default function WeightSection({ date }: { date: string }) {
-  // local state for mvp; i’ll persist to server next
+  // we keep inputs as strings to avoid controlled input jitter
   const [startWeight, setStartWeight] = useState<string>("");
   const [goalWeight, setGoalWeight] = useState<string>("");
   const [points, setPoints] = useState<WeightPoint[]>([]);
 
+  // temporary input for the weight value we want to add/update for the selected date
   const [wValue, setWValue] = useState<string>("");
 
+  // numeric versions only when they are valid; undefined keeps optional ui like reference lines simple
   const goal = Number(goalWeight) || undefined;
   const start = Number(startWeight) || undefined;
 
-  // simple local persistence so refresh keeps my chart
   const STORAGE_KEY = "cc_weight_state_v1";
 
+  // on first mount we hydrate from localstorage; we learned to wrap in try
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -57,12 +64,12 @@ export default function WeightSection({ date }: { date: string }) {
     localStorage.setItem(STORAGE_KEY, payload);
   }, [startWeight, goalWeight, points]);
 
+  // we only plot the dates the user actually entered; sorting by the yyyy-mm-dd string
   const chartData = useMemo(() => {
-    // only plot the explicit dates the user updated
     return [...points].sort((a, b) => a.date.localeCompare(b.date));
   }, [points]);
 
-  // compute y-axis bounds and ticks that increment by 5
+  // we build a list of possible y values so reference lines (goal/start) are considered in the axis range too
   const allYValues = useMemo(() => {
     const values = points.map((p) => p.weight);
     if (goal) values.push(goal);
@@ -70,8 +77,8 @@ export default function WeightSection({ date }: { date: string }) {
     return values;
   }, [points, goal, start]);
 
+  // we learned charts feel better with tidy axes, so we snap to 5-lb increments
   const { yMin, yMax, yTicks } = useMemo(() => {
-    // default range if there is no data yet
     if (allYValues.length === 0) {
       return { yMin: 0, yMax: 10, yTicks: [0, 5, 10] };
     }
@@ -91,18 +98,19 @@ export default function WeightSection({ date }: { date: string }) {
     return { yMin: min, yMax: max, yTicks: ticks };
   }, [allYValues]);
 
-  // upsert a point for the selected date so i can fix mistakes by re-adding
+  // adding a point is an upsert by date so we can fix mistakes by re-adding the same week
   function addPoint(e: React.FormEvent) {
     e.preventDefault();
     const v = Number(wValue);
     if (!Number.isFinite(v) || v <= 0) return;
-    // block choosing a past date
+
+    // we blocked past dates
     if (date < todayISO()) {
       window.alert("you can't choose a past date.");
       return;
     }
+
     setPoints((prev) => {
-      // upsert by date
       const idx = prev.findIndex((p) => p.date === date);
       if (idx >= 0) {
         const copy = [...prev];
@@ -114,7 +122,7 @@ export default function WeightSection({ date }: { date: string }) {
     setWValue("");
   }
 
-  // restart button clears everything with a quick confirm
+  // reset clears everything after a confirm; we used this a lot while iterating on the chart look
   function resetAll() {
     const confirmed = window.confirm(
       "Reset weight tracking? This will clear targets and all points."
@@ -126,9 +134,13 @@ export default function WeightSection({ date }: { date: string }) {
     setWValue("");
   }
 
-  const card = "bg-white/90 border border-sand rounded-xl p-3 sm:p-4 shadow-soft overflow-hidden";
-  const input = "border border-sand/70 bg-white/90 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent/30";
+  // tailwind utility strings kept here so jsx stays readable
+  const card =
+    "bg-white/90 border border-sand rounded-xl p-3 sm:p-4 shadow-soft overflow-hidden";
+  const input =
+    "border border-sand/70 bg-white/90 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent/30";
 
+  // layout: header with restart, targets inputs, add/update form, chart, then a tiny legend
   return (
     <section className={card}>
       <div className="flex items-center justify-between mb-3">
@@ -141,7 +153,6 @@ export default function WeightSection({ date }: { date: string }) {
           Restart
         </button>
       </div>
-
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div className="flex items-center gap-2">
           <label className="text-sm text-slate/80 w-28">Start weight</label>
@@ -165,7 +176,6 @@ export default function WeightSection({ date }: { date: string }) {
         </div>
       </div>
 
-      {/* add weekly point */}
       <form onSubmit={addPoint} className="grid grid-cols-2 gap-2 mb-4">
         <input
           className={`${input} col-span-1`}
@@ -182,20 +192,15 @@ export default function WeightSection({ date }: { date: string }) {
         </button>
       </form>
 
-      {/* chart */}
       <div className="w-full h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 10 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="date"
-              tick={{ fontSize: 12 }}
-              tickMargin={8}
-            />
+            <XAxis dataKey="date" tick={{ fontSize: 12 }} tickMargin={8} />
+            {/* we lock the y axis to 5-lb steps so the chart reads cleaner */}
             <YAxis
               tick={{ fontSize: 12 }}
               tickMargin={8}
-              // lock axis to 5-lb increments
               domain={[yMin, yMax]}
               ticks={yTicks}
             />
@@ -212,19 +217,32 @@ export default function WeightSection({ date }: { date: string }) {
               activeDot={{ r: 5 }}
             />
             {start && (
-              <ReferenceLine y={start} stroke="#64748b" strokeDasharray="3 3" label={{ value: "Start", fill: "#64748b" }} />
+              <ReferenceLine
+                y={start}
+                stroke="#64748b"
+                strokeDasharray="3 3"
+                label={{ value: "Start", fill: "#64748b" }}
+              />
             )}
           </LineChart>
         </ResponsiveContainer>
       </div>
 
-      {/* simple legend */}
+      {/* tiny legend so users know what the lines mean */}
       <div className="mt-2 text-xs text-slate/70">
-        <span className="inline-block w-3 h-1 align-middle mr-1" style={{ background: "#f97316" }} /> Your weight
+        <span
+          className="inline-block w-3 h-1 align-middle mr-1"
+          style={{ background: "#f97316" }}
+        />{" "}
+        Your weight
         {goal ? (
           <>
             {"  "}•{" "}
-            <span className="inline-block w-3 h-1 align-middle mr-1" style={{ background: "#2563eb" }} /> Goal line
+            <span
+              className="inline-block w-3 h-1 align-middle mr-1"
+              style={{ background: "#2563eb" }}
+            />{" "}
+            Goal line
           </>
         ) : null}
       </div>
