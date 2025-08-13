@@ -8,7 +8,7 @@ import { fetchEntriesByDate, deleteEntry } from "./api/entries";
 import type { Entry } from "./types";
 import WeightSection from "./components/WeightSection";
 
-// i learned that toISOString() is utc and can shift the day, so i build a local yyyy-mm-dd
+// learned that toISOString() is utc and can shift the day, so i build a local yyyy-mm-dd
 function todayISO() {
   const d = new Date();
   const y = d.getFullYear();
