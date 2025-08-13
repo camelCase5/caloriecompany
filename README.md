@@ -59,8 +59,9 @@ git remote add origin https://github.com/USERNAME/REPO-NAME.git
 git add .
 
 # Commit the changes
-git commit -m "Initial commit with full project files"
+git commit -m "Adding full project files"
 
 # Push to the remote repository
 git push -u origin main
 ```
+
