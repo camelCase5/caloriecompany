@@ -36,6 +36,7 @@ NOTE: Use this command if you get an security error after entering `npm run dev`
 ```bash
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
+Then try running `npm run dev` again.
 
 The client defaults to `http://localhost:5173` and expects the API at `http://localhost:4000/api`.
 
@@ -204,5 +205,6 @@ Link to Demo Video (ScreenApp.io): https://screenapp.io/app/#/shared/FAiYIntI4v
 - Email: vrajp@vt.edu
 
 - Github: https://github.com/camelCase5
+
 
 
