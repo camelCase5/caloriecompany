@@ -1,6 +1,11 @@
 ﻿# CalorieCompany
 
-This repository has two apps: a Vite React client in `client/` and a Node/Express API in `server/`.
+CalorieCompany is a full-stack web application for tracking daily calorie intake, monitoring progress toward weight goals, and visualizing health data. The app is designed for athletes, college students, and health-conscious users who want an easy way to log meals, review nutrition trends, and track weight changes over time.
+
+
+This repository contains two main components:
+- **Client**: Vite + React + TypeScript + Tailwind (located in `client/`)
+- **Server**: Node.js + Express + Mongoose (located in `server/`)
 
 ## Quick start
 
@@ -34,10 +39,35 @@ The client defaults to `http://localhost:5173` and expects the API at `http://lo
 - Client: set `VITE_API_URL` in `client/.env` to point to a different API if needed
 - Server: set `MONGODB_URI` in `server/.env`
 
-## Project layout
+## Features
+- User-Friendly Dashboard – Displays total calories and nutritional breakdown.
 
-- `client/` React + TypeScript + Tailwind
-- `server/` Express + Mongoose (TypeScript)
+- Add Entry Form – Quickly log meals with calorie counts.
+
+- Weight Progress Chart – View weight changes over time with interactive charts.
+
+- Responsive Design – Works on desktop and mobile devices.
+
+- Data Persistence – All data stored securely in MongoDB via the backend API.
+
+## Future Development Roadmap
+- Add user authentication for personalized data.
+
+- Implement nutrition macros tracking (protein, carbs, fat).
+
+- Introduce goal-setting and progress notifications.
+
+- Add mobile app version using React Native.
+
+## Technology Stack
+
+- Frontend (client): Vite, React, TypeScript, Tailwind CSS
+
+- Backend (server): Node.js, Express.js, Mongoose
+
+- Database: MongoDB
+
+- Other Tools: Git, npm
 
 ## Git commits
 
@@ -75,3 +105,8 @@ git push -u origin main
 
 ### Weight Progress Chart
 ![Weight Progress](./docs/WeightChart.png)
+
+## Contact 
+- Developer: Vraj Patel
+- Email: vrajp@vt.edu
+- Github: https://github.com/camelCase5
