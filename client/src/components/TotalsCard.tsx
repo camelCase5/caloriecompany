@@ -1,4 +1,4 @@
-// small summary card so i can see totals at a glance
+// this represents the total summary card of all macronutrients
 export default function TotalsCard({
   totals,
 }: {
