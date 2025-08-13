@@ -1,4 +1,9 @@
-// this form lets me add a new food entry for the selected date
+// this component is a form we made so users can add a new food entry for the date they selected
+// keeps track of the form fields in local state, and we learned how to store both numbers and strings
+// there is simple validation to make sure the user enters a name and calories before sending to the backend
+// converts any empty nutrient inputs to 0 to prevent issues when saving
+// on submit, we call the api create function, reset the form, and tell the parent that a new entry was added
+
 import { useState } from "react";
 import { createEntry } from "../api/entries";
 import type { Entry } from "../types";
@@ -49,14 +54,12 @@ export default function EntryForm({ date, onCreated }: Props) {
       onCreated(created);
       setForm({ name: "", calories: "", protein: "", carbs: "", fat: "" });
     } catch (e: any) {
-      // i learned to check axios error shape to surface server messages
       setErr(e?.response?.data?.error || "Failed to add entry");
     } finally {
       setLoading(false);
     }
   }
 
-  // shared input style used across the app
   const inputCls =
     "border border-sand/70 bg-white/90 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent/30";
 
