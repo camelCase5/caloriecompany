@@ -65,3 +65,13 @@ git commit -m "Adding full project files"
 git push -u origin main
 ```
 
+## Screenshots
+
+### Home Page
+![Home Page](./docs/MainDash.png)
+
+### Add Entry Form
+![Add Entry](./docs/AddedEntriesMainDash.png)
+
+### Weight Progress Chart
+![Weight Progress](./docs/WeightChart.png)
