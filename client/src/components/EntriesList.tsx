@@ -1,4 +1,8 @@
-// this shows the list of entries and lets me quickly edit inline
+// this component shows a list of food or calorie entries from the backend
+// it also allows editing entries inline so the user doesn't have to go to a separate page
+// we keep track of which entry is currently being edited with an id, and store temporary changes locally
+// when the user saves, we call the backend update function and notify the parent so it refreshes its state
+
 import { useState } from "react";
 import type { Entry } from "../types";
 import { updateEntry } from "../api/entries";
@@ -12,9 +16,9 @@ export default function EntriesList({
   entries: Entry[];
   loading?: boolean;
   onDelete: (id: string) => void;
-  onUpdated: (e: Entry) => void; // notify parent after save
+  onUpdated: (e: Entry) => void;
 }) {
-  // which row is currently being edited (null means none)
+  // which row is currently being edited
   const [editingId, setEditingId] = useState<string | null>(null);
   // i keep a partial copy of the edits so i only send changed fields
   const [edit, setEdit] = useState<Partial<Entry>>({});
@@ -49,7 +53,6 @@ export default function EntriesList({
   }
   if (entries.length === 0) return <p className="text-slate/70">No foods logged yet.</p>;
 
-  // i reused the same input style as the form so both feel cohesive
   const inputCls =
     "border border-sand/70 bg-white/90 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent/30";
 
