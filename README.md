@@ -59,15 +59,100 @@ The client defaults to `http://localhost:5173` and expects the API at `http://lo
 
 - Add mobile app version using React Native.
 
-## Technology Stack
+## Known Issues / Limitations
+- No login system; all data is currently shared
 
-- Frontend (client): Vite, React, TypeScript, Tailwind CSS
+- Basic analytics; advanced reports planned
 
-- Backend (server): Node.js, Express.js, Mongoose
+- Weight tracking requires manual input
 
-- Database: MongoDB
+## API Documentation
 
-- Other Tools: Git, npm
+The backend provides a RESTful API for managing calorie entries and weight data. All endpoints are prefixed with `/api`.
+
+### Base URL
+
+```
+http://localhost:4000/api
+```
+
+### Endpoints
+
+#### Health Check
+
+- **GET** `/api/health`
+- **Description**: Simple health check endpoint for troubleshooting
+- **Response**: `{ "ok": true }`
+
+#### Entries Management
+
+##### Get Entries
+
+- **GET** `/api/entries`
+- **Query Parameters**:
+  - `date` (optional): Filter entries by date (format: `yyyy-mm-dd`)
+- **Description**: Retrieve calorie entries. If no date is provided, returns the latest 50 entries.
+- **Response**: Array of entry objects
+- **Example**: `GET /api/entries?date=2024-01-15`
+
+##### Create Entry
+
+- **POST** `/api/entries`
+- **Description**: Create a new calorie entry
+- **Request Body**:
+
+```json
+{
+  "date": "2024-01-15",
+  "name": "Chicken Breast",
+  "calories": 165,
+  "protein": 31,
+  "carbs": 0,
+  "fat": 3.6
+}
+```
+
+- **Response**: Created entry object with `_id` and timestamps
+
+##### Update Entry
+
+- **PUT** `/api/entries/:id`
+- **Description**: Update an existing entry by ID
+- **Request Body**: Same format as POST (all fields optional)
+- **Response**: Updated entry object
+  
+##### Delete Entry
+
+- **DELETE** `/api/entries/:id`
+- **Description**: Delete an entry by ID
+- **Response**: `{ "ok": true }`
+
+### Data Models
+
+#### Entry Schema
+
+```typescript
+interface Entry {
+  _id: string; // MongoDB ObjectId
+  date: string; // Date in yyyy-mm-dd format
+  name: string; // Food/meal name
+  calories: number; // Calorie count (min: 0)
+  protein: number; // Protein in grams (min: 0, default: 0)
+  carbs: number; // Carbohydrates in grams (min: 0, default: 0)
+  fat: number; // Fat in grams (min: 0, default: 0)
+  createdAt: Date; // Entry creation timestamp
+  updatedAt: Date; // Last update timestamp
+}
+```
+
+### Validation
+
+Request data is validated using Zod schemas:
+
+- Date must be at least 10 characters (yyyy-mm-dd format)
+- Name must be non-empty
+- Calories must be non-negative
+- Protein, carbs, and fat must be non-negative (default to 0 if not provided)
 
 ## Git commits
 
